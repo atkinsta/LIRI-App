@@ -1,0 +1,32 @@
+{
+  "name": "liri-app",
+  "version": "1.0.0",
+  "description": "Liri app",
+  "main": "LIRI.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atkinsta/LIRI-App.git"
+  },
+  "keywords": [
+    "Language",
+    "interpretation",
+    "and",
+    "recognition",
+    "interface"
+  ],
+  "author": "Ty Atkins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atkinsta/LIRI-App/issues"
+  },
+  "homepage": "https://github.com/atkinsta/LIRI-App#readme",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "node-spotify-api": "^1.0.7",
+    "request": "^2.87.0",
+    "twitter": "^1.7.1"
+  }
+}
