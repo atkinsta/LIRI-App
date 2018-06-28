@@ -66,30 +66,30 @@ function twitterCall() {
 
 function spotifyCall(type, search) {
     if (search === "")
-        console.log("Please add a type and search term to your spotify-this. \nIf no type is included, it will default to track");
+        console.log("Please add a type and search term to your spotify-this. \nIf no type is included, it will default to track \nExample: spotify-this artist Elvis Presly");
     else {
         spotify.search({ type: type, query: search }, function (err, data) {
             if (err)
                 console.log(err)
             else {
-                switch (type){
+                switch (type) {
                     case "artist":
                         var info = data.artists.items[0];                        //Using var here instead of let because info is still in the same block (let is block scope) for every case.
                         console.log("Info for %s \n - - - - - - - - -", search); //var is function scope so its allowed. 
-                        console.log("Name: %s \nGenres: %s \nPopularity: %i \nURL: %s\n", 
-                                    info.name, info.genres.join(", "), info.popularity, info.external_urls.spotify);
+                        console.log("Name: %s \nGenres: %s \nPopularity: %i \nURL: %s\n",
+                            info.name, info.genres.join(", "), info.popularity, info.external_urls.spotify);
                         break; //I should probably use return here? I think it works because I'm not doing anything after this runs. If I was, I should use return.
                     case "album":
                         var info = data.albums.items[0];
                         console.log("Info for %s \n - - - - - - - - - ", search);
                         console.log("Album Name: %s \nArtist's Name: %s \nReleased: %s \nURL: %s \n",
-                                    info.name, info.artists[0].name, info.release_date, info.external_urls.spotify);
+                            info.name, info.artists[0].name, info.release_date, info.external_urls.spotify);
                         break;
                     case "track":
                         var info = data.tracks.items[0];
                         console.log("Info for %s \n - - - - - - - - - -", search);
                         console.log("Track Name: %s \nArtist's Name: %s \nAlbum: %s \nTrack Number: %i \nReleased: %s \nURL: %s \n",
-                                    info.name, info.artists[0].name, info.album.name, info.track_number, info.album.release_date, info.external_urls.spotify);
+                            info.name, info.artists[0].name, info.album.name, info.track_number, info.album.release_date, info.external_urls.spotify);
                         break;
                 }
             }
@@ -98,24 +98,31 @@ function spotifyCall(type, search) {
 }
 
 function movieCall(search) {
-    let queryURL = "http://www.omdbapi.com/?apikey=1a4f2ae8&t=" + search;
-    request(queryURL, function(error, response, stringBody) { //response is there just so that I can access body directly, not using it.
-        if (error)
-            console.log(error);
-        else {
-            let body = JSON.parse(stringBody)
-            console.log(body);
-            console.log("Info for %s \n - - - - - - - - - -", search);
-            console.log("Title: %s \nRelease year: %s \nGenre: %s \nDirector: %s \nActors: %s\nLanguage: %s \nCountry of Origin: %s" +
+    if (search === "")
+        console.log("Please add a search term to your movie-this\n")
+    else {
+        let queryURL = "http://www.omdbapi.com/?apikey=1a4f2ae8&t=" + search;
+        request(queryURL, function (error, response, stringBody) { //response is there just so that I can access body directly, not using it.
+            if (error)
+                console.log(error);
+            else {
+                let body = JSON.parse(stringBody)
+                if (!body.title === undefined) {
+                    console.log("Info for %s \n - - - - - - - - - -", search);
+                    console.log("Title: %s \nRelease year: %s \nGenre: %s \nDirector: %s \nActors: %s\nLanguage(s): %s \nCountry(ies) of Origin: %s" +
                         "\nPlot: %s\nRatings \n - - - - - - - - - - \nIMDb: %s \nRotten Tomatoes: %s",
                         body.Title, body.Year, body.Genre, body.Director, body.Actors, body.Language, body.Country, body.Plot,
                         body.Ratings[0].Value, body.Ratings[1].Value);
-        }
-    });
+                }
+                else
+                    console.log("I couldn't find that movie, please try again");
+            }
+        });
+    }
 }
 
 function textCall() {
-    fs.readFile("random.txt", "utf8", function(err, data) {
+    fs.readFile("random.txt", "utf8", function (err, data) {
         var splitData = data.split(",");
         command = splitData[0];
         type = splitData[1];
