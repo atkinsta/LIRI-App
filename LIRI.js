@@ -18,7 +18,7 @@ if (command === "spotify-this") {               //Allows the user to choose what
         type = process.argv[3];
         term = process.argv.slice(4).join(" ");
     }
-    else {
+    else {                                      //Defaults to "track" search if the user leaves out a type in the "spotify-this" command.
         type = "track";
         term = process.argv.slice(3).join(" ")
     }
@@ -31,7 +31,7 @@ switch (command) { //Switch function to determine what function we call and what
         console.log("\nValid commands: \n\nmy-tweets \nspotify-this [artist OR album OR track] [your search term] \nmovie-this [your search term] \n____________________________");
         break;
     case "my-tweets":
-        console.log("\nI will log tweets");
+        console.log("\nI will log your most recent tweets");
         twitterCall();
         break;
     case "spotify-this":
@@ -39,7 +39,8 @@ switch (command) { //Switch function to determine what function we call and what
         spotifyCall(type, term);
         break;
     case "movie-this":
-        console.log("\nI will look up this movie\n", term);
+        console.log("\nI will look up %s on OMDb\n", term);
+        movieCall(term);
         break;
     default:
         console.log("\nInvalid command or search, pass 'help' as an argument to see the available commands.\n")
@@ -73,7 +74,7 @@ function spotifyCall(type, search) {
                         console.log("Info for %s \n - - - - - - - - -", search); //var is function scope so its allowed. 
                         console.log("Name: %s \nGenres: %s \nPopularity: %i \nURL: %s\n", 
                                     info.name, info.genres.join(", "), info.popularity, info.external_urls.spotify);
-                        break;
+                        break; //I should probably use return here? I think it works because I'm not doing anything after this runs. If I was, I should use return.
                     case "album":
                         var info = data.albums.items[0];
                         console.log("Info for %s \n - - - - - - - - - ", search);
@@ -90,4 +91,21 @@ function spotifyCall(type, search) {
             }
         });
     }
+}
+
+function movieCall(search) {
+    let queryURL = "http://www.omdbapi.com/?apikey=1a4f2ae8&t=" + search;
+    request(queryURL, function(error, response, stringBody) { //response is there just so that I can access body directly, not using it.
+        if (error)
+            console.log(error);
+        else {
+            let body = JSON.parse(stringBody)
+            console.log(body);
+            console.log("Info for %s \n - - - - - - - - - -", search);
+            console.log("Title: %s \nRelease year: %s \nGenre: %s \nDirector: %s \nActors: %s\nLanguage: %s \nCountry of Origin: %s" +
+                        "\nPlot: %s\nRatings \n - - - - - - - - - - \nIMDb: %s \nRotten Tomatoes: %s",
+                        body.Title, body.Year, body.Genre, body.Director, body.Actors, body.Language, body.Country, body.Plot,
+                        body.Ratings[0].Value, body.Ratings[1].Value);
+        }
+    });
 }
