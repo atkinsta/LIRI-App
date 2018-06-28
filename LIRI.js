@@ -1,5 +1,5 @@
 require("dotenv").config();
-let keys = require("./keys");
+let keys = require("./keys");       //Using let to get used to it for ES6, const would also work here I think. We're not ever changing that object. 
 let Twitter = require("twitter");
 let Spotify = require("node-spotify-api");
 let request = require("request");
@@ -46,7 +46,7 @@ switch (command) { //Switch function to determine what function we call and what
     case "do-what-it-says":
         textCall();
         break;
-    default:
+    default:    //Rather than default to a specific command, it logs a statement leading the user to the help command.
         console.log("\nInvalid command or search, pass 'help' as an argument to see the available commands.\n")
         break;
 };
@@ -107,15 +107,16 @@ function movieCall(search) {
                 console.log(error);
             else {
                 let body = JSON.parse(stringBody)
-                if (!body.title === undefined) {
+                if (body.Title === undefined) {
+                    console.log("I couldn't find that movie, please try again")
+                }
+                else {
                     console.log("Info for %s \n - - - - - - - - - -", search);
                     console.log("Title: %s \nRelease year: %s \nGenre: %s \nDirector: %s \nActors: %s\nLanguage(s): %s \nCountry(ies) of Origin: %s" +
                         "\nPlot: %s\nRatings \n - - - - - - - - - - \nIMDb: %s \nRotten Tomatoes: %s",
                         body.Title, body.Year, body.Genre, body.Director, body.Actors, body.Language, body.Country, body.Plot,
                         body.Ratings[0].Value, body.Ratings[1].Value);
                 }
-                else
-                    console.log("I couldn't find that movie, please try again");
             }
         });
     }
@@ -123,7 +124,7 @@ function movieCall(search) {
 
 function textCall() {
     fs.readFile("random.txt", "utf8", function (err, data) {
-        var splitData = data.split(",");
+        let splitData = data.split(",");
         command = splitData[0];
         type = splitData[1];
         term = splitData.slice(2);
