@@ -111,6 +111,10 @@ function movieCall(search) {
                     console.log("I couldn't find that movie, please try again")
                 }
                 else {
+                    if (body.Ratings[0] === undefined || body.Ratings[0].Value === undefined) //Not sure how this works, but I was getting errors if the movie didn't have IMDb or
+                        body.Ratings[0] = {value: undefined};                                 //Rotten Tomatoes ratings so I just set them to appear as undefined but continue. So
+                    if (body.Ratings[1] === undefined || body.Ratings[1].Value === undefined) //it didn't spit out an error to the user. 
+                        body.Ratings[1] = {value: undefined};                                 //This is because some movies return a different ratings object than others. 
                     console.log("Info for %s \n - - - - - - - - - -", search);
                     console.log("Title: %s \nRelease year: %s \nGenre: %s \nDirector: %s \nActors: %s\nLanguage(s): %s \nCountry(ies) of Origin: %s" +
                         "\nPlot: %s\nRatings \n - - - - - - - - - - \nIMDb: %s \nRotten Tomatoes: %s",
