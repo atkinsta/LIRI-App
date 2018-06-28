@@ -3,6 +3,7 @@ let keys = require("./keys");
 let Twitter = require("twitter");
 let Spotify = require("node-spotify-api");
 let request = require("request");
+let fs = require("fs")
 
 let client = new Twitter(keys.twitter); //This is a bit sketchy, have to make sure you use the right case for Twitter and Spotify. 
 let username = { screen_name: "atkinsta_dev" }; //Used in twitter requests.
@@ -28,7 +29,7 @@ else
 
 switch (command) { //Switch function to determine what function we call and what we return to command line. 
     case "help":
-        console.log("\nValid commands: \n\nmy-tweets \nspotify-this [artist OR album OR track] [your search term] \nmovie-this [your search term] \n____________________________");
+        console.log("\nValid commands: \n\nmy-tweets \nspotify-this [artist OR album OR track] [your search term] \nmovie-this [your search term] \ndo-what-it-says \n____________________________");
         break;
     case "my-tweets":
         console.log("\nI will log your most recent tweets");
@@ -41,6 +42,9 @@ switch (command) { //Switch function to determine what function we call and what
     case "movie-this":
         console.log("\nI will look up %s on OMDb\n", term);
         movieCall(term);
+        break;
+    case "do-what-it-says":
+        textCall();
         break;
     default:
         console.log("\nInvalid command or search, pass 'help' as an argument to see the available commands.\n")
@@ -107,5 +111,15 @@ function movieCall(search) {
                         body.Title, body.Year, body.Genre, body.Director, body.Actors, body.Language, body.Country, body.Plot,
                         body.Ratings[0].Value, body.Ratings[1].Value);
         }
+    });
+}
+
+function textCall() {
+    fs.readFile("random.txt", "utf8", function(err, data) {
+        var splitData = data.split(",");
+        command = splitData[0];
+        type = splitData[1];
+        term = splitData.slice(2);
+        spotifyCall(type, term);
     });
 }
